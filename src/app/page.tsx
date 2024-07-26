@@ -12,8 +12,33 @@ import { db, user } from "@/drizzle";
 import { NeonDbError } from "@neondatabase/serverless";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
-export default function Home() {
+type User = typeof user.$inferInsert;
+
+export const revalidate = 0;
+
+export default async function Home() {
+  const users: User[] = await db.select().from(user);
+
+  users.unshift({
+    id: 0,
+    name: "",
+    email: "",
+    password: "",
+    role: "admin",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4">
       <h1 className="text-4xl font-bold">Welcome to Aciertamente</h1>
@@ -41,7 +66,6 @@ export default function Home() {
             if (error instanceof NeonDbError) console.error(error.detail);
           }
 
-          revalidatePath("/");
           redirect("/");
         }}
         className="flex flex-col justify-center gap-4"
@@ -88,6 +112,33 @@ export default function Home() {
           Create user
         </Button>
       </form>
+
+      <h2 className="text-2xl font-bold">Users</h2>
+
+      <div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {Object.keys(users[0]).map((key) => (
+                <TableHead key={key}>{key}</TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {users.slice(1).map((user) => (
+              <TableRow key={user.id}>
+                <TableCell>{user.id}</TableCell>
+                <TableCell>{user.name}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.password}</TableCell>
+                <TableCell>{user.role}</TableCell>
+                <TableCell>{user.createdAt.toDateString()}</TableCell>
+                <TableCell>{user.updatedAt?.toDateString()}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </main>
   );
 }
