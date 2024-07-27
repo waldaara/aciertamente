@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import { Inter as FontSans } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
 
 import { cn } from "@/lib/utils";
 import { Metadata } from "next";
@@ -28,7 +29,9 @@ export default function RootLayout({
         )}
       >
         {children}
+        <Toaster />
       </body>
     </html>
   );
 }
+

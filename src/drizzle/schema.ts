@@ -1,11 +1,18 @@
-import { serial, text, timestamp, pgTable } from "drizzle-orm/pg-core";
+import {
+  serial,
+  text,
+  timestamp,
+  pgTable,
+  integer,
+  doublePrecision,
+} from "drizzle-orm/pg-core";
 
-export const user = pgTable("user", {
+export const data = pgTable("data", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  password: text("password").notNull(),
-  role: text("role").$type<"admin" | "customer">().notNull(),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  age: integer("age").notNull(),
+  decibels: integer("decibels").notNull(),
+  duration: doublePrecision("duration").notNull(),
+  points: integer("points").notNull(),
+  sex: text("sex").$type<"male" | "female">().notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
