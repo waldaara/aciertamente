@@ -41,7 +41,8 @@ export default function Play() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
-  const [startTime, setStartTime] = useState(Date.now());
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -152,6 +153,7 @@ export default function Play() {
                   setNumberSequence("");
                 } else {
                   setIsGameOver(true);
+                  setEndTime(Date.now());
                 }
               }
             }}
@@ -287,7 +289,8 @@ export default function Play() {
                 required
                 id="duration"
                 name="duration"
-                value={(Date.now() - startTime) / 1000}
+                value={((endTime - startTime) / 1000).toFixed(2)}
+                step="0.01"
                 min={1}
                 type="number"
                 className="col-span-3"
@@ -300,6 +303,8 @@ export default function Play() {
               type="submit"
               onClick={async () => {
                 if (formRef.current) {
+                  if (!formRef.current.reportValidity()) return;
+
                   setLoading(true);
                   await sendData(new FormData(formRef.current));
                   setLoading(false);
