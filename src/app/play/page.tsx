@@ -30,13 +30,16 @@ import { toast } from "sonner";
 import { sendData } from "@/actions/sendData";
 import { useRouter } from "next/navigation";
 
+const SHOW_NUMBER_SEQUENCE_DURATION = 10;
+const SHOW_NEXT_NUMBER_SEQUENCE_DURATION = 3;
+
 export default function Play() {
   const { width, height } = useWindowSize();
   const [startCount, setStartCount] = useState(1);
   const [numberSequences, setNumberSequences] = useState<string[]>([]);
   const [numberSequence, setNumberSequence] = useState("");
   const [numberSequenceIndex, setNumberSequenceIndex] = useState(0);
-  const [timer, setTimer] = useState(5);
+  const [timer, setTimer] = useState(SHOW_NUMBER_SEQUENCE_DURATION);
   const [showNumberSequence, setShowNumberSequence] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
@@ -70,7 +73,8 @@ export default function Play() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (startCount > 3) return clearInterval(interval);
+      if (startCount > SHOW_NEXT_NUMBER_SEQUENCE_DURATION)
+        return clearInterval(interval);
 
       setStartCount((startCount) => startCount + 1);
     }, 1000);
@@ -79,7 +83,7 @@ export default function Play() {
   }, [startCount]);
 
   useEffect(() => {
-    if (startCount > 3) {
+    if (startCount > SHOW_NEXT_NUMBER_SEQUENCE_DURATION) {
       setShowNumberSequence(true);
 
       const interval = setInterval(() => {
@@ -100,7 +104,9 @@ export default function Play() {
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 relative">
       {showConfetti && <Confetti width={width} height={height} />}
 
-      {startCount <= 3 && <h1 className="text-7xl font-bold">{startCount}</h1>}
+      {startCount <= SHOW_NEXT_NUMBER_SEQUENCE_DURATION && (
+        <h1 className="text-7xl font-bold">{startCount}</h1>
+      )}
 
       {showNumberSequence && (
         <span className="absolute top-10 right-10 font-bold bg-primary text-xl rounded-full w-10 aspect-square flex place-content-center flex-wrap">
@@ -108,7 +114,7 @@ export default function Play() {
         </span>
       )}
 
-      {startCount > 3 && (
+      {startCount > SHOW_NEXT_NUMBER_SEQUENCE_DURATION && (
         <>
           <span className="font-bold text-xl absolute left-10 top-10">
             {numberSequenceIndex + 1} / {numberSequences.length}
@@ -149,7 +155,7 @@ export default function Play() {
                   );
 
                   setStartCount(1);
-                  setTimer(5);
+                  setTimer(SHOW_NUMBER_SEQUENCE_DURATION);
                   setNumberSequence("");
                 } else {
                   setIsGameOver(true);
