@@ -58,6 +58,10 @@ export default function Play() {
       let numberSequence = "";
 
       for (let j = 0; j < 5; j++) {
+        const crypto = window.crypto || window.msCrypto;
+        const array = new Uint32Array(1);
+        let random = crypto.getRandomValues(array).toString()
+
         const randomNumber = Math.floor(Math.random() * (99 - 10 + 1) + 10);
 
         numberSequence += randomNumber;
