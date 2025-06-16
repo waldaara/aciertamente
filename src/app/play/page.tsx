@@ -62,7 +62,7 @@ export default function Play() {
         const array = new Uint32Array(1);
         let random = crypto.getRandomValues(array).toString()
 
-        const randomNumber = Math.floor(Math.random() * (99 - 10 + 1) + 10);
+        const randomNumber = Math.floor(random * (99 - 10 + 1) + 10);
 
         numberSequence += randomNumber;
       }
