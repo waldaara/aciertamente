@@ -26,6 +26,6 @@ export async function sendData(formData: FormData) {
       sex,
     });
   } catch (error) {
-    console.log("Failed to send data!!!!")
+    console.log(`Exception while sending data: ${err}`);
   }
 }
